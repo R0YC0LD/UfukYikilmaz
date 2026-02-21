@@ -3,256 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SHN | EXCLUSIVE ACCESS</title>
+    <title>SHN | DISCOGRAPHY ACCESS</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=Space+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #050505;
             --card-bg: #0f0f0f;
             --accent: #ffffff;
-            --secondary: #555555;
             --shn-red: #ff003c;
+            --secondary: #555;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
-        body {
-            background-color: var(--bg);
-            color: var(--accent);
-            font-family: 'Inter', sans-serif;
-            overflow: hidden;
-            height: 100vh;
-        }
+        body { background-color: var(--bg); color: var(--accent); font-family: 'Inter', sans-serif; overflow-x: hidden; }
 
         /* --- INTRO SİSTEMİ --- */
         #intro {
-            position: fixed;
-            inset: 0;
-            background: #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-            overflow: hidden;
-            cursor: pointer;
+            position: fixed; inset: 0; background: #000; display: flex;
+            justify-content: center; align-items: center; z-index: 2000;
+            transition: opacity 0.8s ease; overflow: hidden; cursor: pointer;
         }
 
-        /* Arka Planda Süzülen Yazılar */
-        .floating-text-container {
-            position: absolute;
-            inset: 0;
-            opacity: 0.15;
-            pointer-events: none;
+        /* Akışkan Yazılar (Daha Kaliteli) */
+        .flow-container {
+            position: absolute; inset: 0; opacity: 0.1;
+            display: flex; flex-direction: column; gap: 20px;
+            transform: rotate(-15deg) scale(1.2);
         }
 
-        .float-text {
-            position: absolute;
-            font-family: 'Space Mono';
-            font-size: 0.8rem;
-            color: #fff;
-            white-space: nowrap;
-            animation: move linear infinite;
+        .flow-line {
+            white-space: nowrap; font-family: 'Space Mono'; font-size: 1.2rem;
+            animation: slide 30s linear infinite;
+        }
+        .flow-line:nth-child(even) { animation-direction: reverse; }
+
+        @keyframes slide { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+        .karma-img {
+            width: 220px; z-index: 10;
+            animation: breatheImg 3s infinite ease-in-out;
         }
 
-        @keyframes move {
-            from { transform: translateY(100vh); }
-            to { transform: translateY(-100px); }
-        }
-
-        .karma-svg {
-            width: 180px;
-            z-index: 10;
-            fill: #fff;
-            filter: drop-shadow(0 0 15px rgba(255,255,255,0.4));
-            animation: karmaPulse 3s infinite ease-in-out;
-        }
-
-        @keyframes karmaPulse {
-            0%, 100% { opacity: 0.5; transform: scale(0.95); filter: drop-shadow(0 0 5px #fff); }
-            50% { opacity: 1; transform: scale(1.05); filter: drop-shadow(0 0 25px var(--shn-red)); }
+        @keyframes breatheImg {
+            0%, 100% { opacity: 0.3; transform: scale(0.95); filter: brightness(0.5); }
+            50% { opacity: 1; transform: scale(1.05); filter: brightness(1.2) drop-shadow(0 0 20px #fff); }
         }
 
         /* --- ANA İÇERİK --- */
-        main {
-            padding: 20px;
-            max-width: 450px;
-            margin: 0 auto;
-            opacity: 0;
-            transition: 1.2s ease;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            height: 100vh;
-            overflow-y: auto;
+        main { padding: 20px; max-width: 500px; margin: 0 auto; opacity: 0; transition: 1s ease; padding-bottom: 50px; }
+
+        /* Profil Kısmı */
+        .profile-section { text-align: center; margin: 30px 0; }
+        .pp-container {
+            width: 120px; height: 120px; border-radius: 50%; margin: 0 auto 15px;
+            border: 2px solid #fff; overflow: hidden; background: #111;
         }
+        .pp-container img { width: 100%; height: 100%; object-fit: cover; }
+        .shn-name { font-size: 1.8rem; font-weight: 700; letter-spacing: -1px; }
 
-        .header {
-            text-align: left;
-            margin: 30px 0 10px 0;
-            border-left: 3px solid #fff;
-            padding-left: 15px;
+        /* Bölüm Başlıkları */
+        .section-title {
+            font-family: 'Space Mono'; font-size: 0.7rem; color: var(--shn-red);
+            text-transform: uppercase; letter-spacing: 3px; margin: 25px 0 15px 0;
+            display: flex; align-items: center; gap: 10px;
         }
+        .section-title::after { content: ""; flex: 1; height: 1px; background: #222; }
 
-        .shn-title { font-size: 2rem; font-weight: 700; letter-spacing: -1px; }
-        .sub-data { font-family: 'Space Mono'; font-size: 0.65rem; color: var(--secondary); }
-
-        .card {
-            background: var(--card-bg);
-            border-radius: 15px;
-            padding: 18px;
-            border: 1px solid #1a1a1a;
-        }
-
-        .stat-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 12px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid #161616;
-        }
-        .stat-row:last-child { border: none; margin: 0; padding: 0; }
-
-        .label { font-size: 0.6rem; color: var(--secondary); text-transform: uppercase; letter-spacing: 1px; }
-        .value { font-size: 0.85rem; font-family: 'Space Mono'; }
-
-        /* --- KOLEKSİYON --- */
-        .progress-section {
-            background: var(--card-bg);
-            border-radius: 15px;
-            padding: 20px;
-            border: 1px solid #1a1a1a;
-        }
-
-        .bar-bg {
-            width: 100%; height: 4px; background: #1a1a1a; border-radius: 2px; margin: 10px 0 20px 0;
-        }
-
-        #bar-fill {
-            height: 100%; width: 0%; background: #fff; box-shadow: 0 0 10px #fff;
-            transition: width 2s cubic-bezier(0.2, 0, 0.2, 1);
-        }
-
-        .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-
-        .photo-slot {
-            aspect-ratio: 1; background: #050505; border-radius: 8px; overflow: hidden;
-            display: flex; justify-content: center; align-items: center; border: 1px solid #161616;
-        }
-        .photo-slot img { width: 100%; height: 100%; object-fit: cover; }
-
-        /* --- İMZA --- */
-        .signature {
-            text-align: center;
-            margin-top: auto;
-            padding: 20px 0;
-            font-size: 0.6rem;
-            color: var(--secondary);
-            font-family: 'Space Mono';
-            letter-spacing: 1px;
-        }
-
-        .signature a {
-            color: #fff;
-            text-decoration: none;
-            font-weight: 700;
-            border-bottom: 1px solid var(--secondary);
+        /* Diskografi Grid */
+        .album-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .album-card {
+            background: var(--card-bg); border-radius: 12px; overflow: hidden;
+            border: 1px solid #1a1a1a; text-decoration: none; color: #fff;
             transition: 0.3s;
         }
+        .album-card:active { transform: scale(0.95); }
+        .album-img { width: 100%; aspect-ratio: 1; background: #222; }
+        .album-img img { width: 100%; height: 100%; object-fit: cover; }
+        .album-info { padding: 10px; }
+        .album-name { font-size: 0.75rem; font-weight: 700; display: block; }
+        .album-date { font-size: 0.6rem; color: var(--secondary); font-family: 'Space Mono'; }
 
-        .signature a:hover { color: var(--shn-red); border-color: var(--shn-red); }
+        /* Koleksiyon Progress */
+        .card { background: var(--card-bg); border-radius: 15px; padding: 15px; border: 1px solid #1a1a1a; }
+        .bar-bg { width: 100%; height: 4px; background: #1a1a1a; margin-top: 10px; }
+        #bar-fill { height: 100%; width: 0%; background: #fff; box-shadow: 0 0 10px #fff; transition: 2s ease; }
 
-        .nav-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .btn {
-            background: #fff; color: #000; text-decoration: none; padding: 14px;
-            border-radius: 12px; text-align: center; font-size: 0.75rem; font-weight: 700;
-        }
-        .btn-alt { background: var(--card-bg); color: #fff; border: 1px solid #1a1a1a; }
+        /* İmza */
+        .sig { text-align: center; margin-top: 40px; font-size: 0.6rem; color: var(--secondary); font-family: 'Space Mono'; }
+        .sig a { color: #fff; text-decoration: none; font-weight: 700; }
+
+        .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+        .btn { background: #fff; color: #000; text-decoration: none; padding: 12px; border-radius: 10px; text-align: center; font-size: 0.8rem; font-weight: 700; }
     </style>
 </head>
 <body onload="init()">
 
     <div id="intro" onclick="reveal()">
-        <div class="floating-text-container" id="flow"></div>
-        <svg class="karma-svg" viewBox="0 0 300 150">
-            <path d="M40,70 Q60,20 90,70 T140,70 M160,30 L160,110 M180,70 Q210,20 240,70 T290,70 M40,100 L260,100" fill="none" stroke="white" stroke-width="4" stroke-linecap="round" opacity="0.8"/>
-            <text x="50%" y="85" text-anchor="middle" font-family="Syncopate, sans-serif" font-weight="bold" font-size="45" fill="white">KARMA</text>
-        </svg>
+        <div class="flow-container" id="flow"></div>
+        <img src="karma.png" class="karma-img" alt="KARMA">
     </div>
 
     <main id="main">
-        <div class="header">
-            <h1 class="shn-title">UFUK YIKILMAZ</h1>
-            <div class="sub-data">AUTH: 271286 / PROJECT: KARMA</div>
+        <div class="profile-section">
+            <div class="pp-container">
+                <img src="sehinshah.jpg" alt="Şehinşah">
+            </div>
+            <h1 class="shn-name">UFUK YIKILMAZ</h1>
+            <p style="font-size:0.7rem; color:var(--secondary); font-family:'Space Mono'">@SEHINSHAH / VERIFIED ACCESS</p>
         </div>
 
+        <div class="section-title">Koleksiyon Durumu</div>
         <div class="card">
-            <div class="stat-row">
-                <span class="label">Status</span>
-                <span class="value">AUTHORIZED</span>
-            </div>
-            <div class="stat-row">
-                <span class="label">Life Cycle</span>
-                <span class="value" id="timer">00.00000000</span>
-            </div>
-        </div>
-
-        <div class="progress-section">
-            <div class="progress-header" style="display:flex; justify-content:space-between">
-                <span class="label">Collection</span>
-                <span class="value" id="count-label" style="font-size:0.7rem">0 / 100</span>
+            <div style="display:flex; justify-content:space-between; font-size:0.7rem">
+                <span>FOTOĞRAF ARŞİVİ</span>
+                <span id="count-label">0 / 100</span>
             </div>
             <div class="bar-bg"><div id="bar-fill"></div></div>
-            <div class="photo-grid" id="grid"></div>
         </div>
 
-        <div class="nav-grid">
-            <a href="http://googleusercontent.com/spotify.com/4" target="_blank" class="btn">Spotify</a>
-            <a href="https://instagram.com/sehinshah" target="_blank" class="btn btn-alt">Instagram</a>
+        <div class="section-title">Diskografi</div>
+        <div class="album-grid">
+            <a href="https://open.spotify.com/album/1zkZPiKRqqVJPKIqap3SU8?si=kK3mFMXbSSmmwWDCJx0bAw" target="_blank" class="album-card">
+                <div class="album-img"><img src="ikarus.jpg" alt="IKARUS"></div>
+                <div class="album-info">
+                    <span class="album-name">IKARUS</span>
+                    <span class="album-date">10 MAYIS 2024</span>
+                </div>
+            </a>
+            <a href="https://open.spotify.com/album/6cWS5yrVFflrNt7o7eWgqx?si=rjootJ2_TKmCGQRkaDdSpg" target="_blank" class="album-card">
+                <div class="album-img"><img src="666.jpg" alt="666"></div>
+                <div class="album-info">
+                    <span class="album-name">666</span>
+                    <span class="album-date">22 EKİM 2020</span>
+                </div>
+            </a>
+            <a href="https://open.spotify.com/album/2q7QzY8q8OVxa5sAyyl8OF?si=hce-O0Q7RWOGrh83tt5HFA" target="_blank" class="album-card">
+                <div class="album-img"><img src="deev.jpg" alt="DEEV"></div>
+                <div class="album-info">
+                    <span class="album-name">DEEV</span>
+                    <span class="album-date">20 ŞUBAT 2016</span>
+                </div>
+            </a>
+            <a href="https://open.spotify.com/album/5wDw71G6My66IurTcLbULV?si=OW6vcMAIR7up82COdhEkeA" target="_blank" class="album-card">
+                <div class="album-img"><img src="dss.jpg" alt="DSS"></div>
+                <div class="album-info">
+                    <span class="album-name">DSS (DELUXE)</span>
+                    <span class="album-date">8 TEMMUZ 2022</span>
+                </div>
+            </a>
         </div>
 
-        <div class="signature">
-            MADE BY <a href="https://www.instagram.com/on_r19/" target="_blank">ONUR (R0YC0LD) TERYAKİOĞLU</a>
+        <div class="btn-group">
+            <a href="https://www.instagram.com/sehinsah/" target="_blank" class="btn">Instagram</a>
+            <a href="https://open.spotify.com/intl-tr/artist/0FUsrstJwmg4WVHQMTYuUA" target="_blank" class="btn" style="background:#1DB954; color:#fff">Spotify</a>
+        </div>
+
+        <div class="sig">
+            MADE BY <a href="https://www.instagram.com/on_r19/" target="_blank">ONUR TERYAKİOĞLU</a>
         </div>
     </main>
 
     <script>
         const photoCount = 3; 
         const maxGoal = 100;
-        const tracks = ["DEEV", "KARMA", "YAK YAK YAK", "İSTİLA", "PİRHANE", "ATLAS", "AUTOPILOT", "MİLYON", "GENSİN", "HİP HOP"];
+        const albumList = [
+            "6EP - 7 ŞUBAT 2025", "IKARUS - 10 MAYIS 2024", "666 - 22 EKİM 2020",
+            "DEEV - 20 ŞUBAT 2016", "HIPHOP OKULU - 2009", "KARMA - 2020",
+            "RRR! - 2007", "HAREMEYNALAMUT - 2006", "İSTİLA", "YAK YAK YAK"
+        ];
 
         function init() {
-            // Arka plan yazıları oluştur
+            // Intro akış yazıları
             const flow = document.getElementById('flow');
-            for(let i=0; i<20; i++) {
-                const span = document.createElement('span');
-                span.className = 'float-text';
-                span.innerText = tracks[Math.floor(Math.random()*tracks.length)];
-                span.style.left = Math.random() * 100 + 'vw';
-                span.style.animationDuration = (Math.random() * 5 + 3) + 's';
-                span.style.animationDelay = (Math.random() * 5) + 's';
-                flow.appendChild(span);
+            for(let i=0; i<8; i++) {
+                const line = document.createElement('div');
+                line.className = 'flow-line';
+                line.innerText = (albumList.join(" • ") + " • ").repeat(5);
+                line.style.animationDuration = (20 + Math.random() * 20) + 's';
+                flow.appendChild(line);
             }
 
-            // Yaş
-            const bday = new Date('1986-12-27T00:00:00');
-            setInterval(() => {
-                const age = (new Date() - bday) / (1000 * 60 * 60 * 24 * 365.25);
-                document.getElementById('timer').innerText = age.toFixed(8);
-            }, 100);
-
-            // Grid
-            const grid = document.getElementById('grid');
-            for(let i=1; i<=6; i++) {
-                const slot = document.createElement('div');
-                slot.className = 'photo-slot';
-                if(i <= photoCount) {
-                    slot.innerHTML = `<img src="${i}.jpg" onerror="this.parentElement.innerHTML='<small>ERR</small>'">`;
-                } else {
-                    slot.innerHTML = `<span style="color:#111; font-size:10px;">${i}</span>`;
-                }
-                grid.appendChild(slot);
-            }
+            // Yaş vs. (Gerekiyorsa eklenebilir ama diskografi odaklı yaptık)
         }
 
         function reveal() {
