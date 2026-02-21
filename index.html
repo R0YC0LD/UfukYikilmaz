@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KARMA | UFUK YIKILMAZ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ffffff;
+            --accent: #ff003c;
+            --bg: #000000;
+            --gray: #1a1a1a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: crosshair; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--primary);
+            font-family: 'Space Mono', monospace;
+            overflow: hidden;
+            height: 100vh;
+            text-transform: uppercase;
+        }
+
+        /* --- INTRO LAYER --- */
+        #intro {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: all 0.8s cubic-bezier(0.9, 0, 0.1, 1);
+        }
+
+        .karma-logo {
+            width: 280px;
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
+            animation: breathe 2s infinite ease-in-out;
+        }
+
+        @keyframes breathe {
+            0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.6; filter: drop-shadow(0 0 5px #fff); }
+            50% { transform: scale(1.05) rotate(1deg); opacity: 1; filter: drop-shadow(0 0 25px var(--accent)); }
+        }
+
+        .tap-to-enter {
+            margin-top: 30px;
+            font-family: 'Syncopate';
+            font-size: 0.7rem;
+            letter-spacing: 5px;
+            color: #444;
+            animation: blink 1s infinite;
+        }
+
+        /* --- MAIN CONTENT --- */
+        main {
+            display: grid;
+            grid-template-rows: 1fr auto;
+            height: 100vh;
+            padding: 40px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: 1s ease-out;
+        }
+
+        .profile-header {
+            border-left: 2px solid var(--accent);
+            padding-left: 20px;
+            align-self: center;
+        }
+
+        .name {
+            font-family: 'Syncopate';
+            font-size: clamp(2rem, 8vw, 5rem);
+            line-height: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .alias {
+            color: var(--accent);
+            font-size: 1.2rem;
+            letter-spacing: 8px;
+            margin-bottom: 20px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            max-width: 600px;
+            margin-top: 30px;
+        }
+
+        .stat-box {
+            background: var(--gray);
+            padding: 15px;
+            border-bottom: 1px solid #333;
+        }
+
+        .stat-label { font-size: 0.6rem; color: #666; margin-bottom: 5px; }
+        .stat-value { font-size: 1rem; color: #fff; }
+
+        /* Yaşam Sayacı */
+        #age-timer { color: var(--accent); font-weight: bold; }
+
+        .links {
+            display: flex;
+            gap: 20px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: 1px solid #fff;
+            text-decoration: none;
+            color: #fff;
+            font-size: 0.8rem;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            background: #fff;
+            color: #000;
+            box-shadow: 0 0 20px #fff;
+        }
+
+        /* --- EFFECTS --- */
+        .scanlines {
+            position: fixed; inset: 0;
+            background: linear-gradient(to bottom, rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(to right, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 4px, 3px 100%;
+            pointer-events: none;
+            z-index: 500;
+        }
+
+        @keyframes blink { 50% { opacity: 0; } }
+
+        .vignette {
+            position: fixed; inset: 0;
+            background: radial-gradient(circle, transparent 20%, black 120%);
+            pointer-events: none;
+            z-index: 501;
+        }
+    </style>
+</head>
+<body onload="initTimer()">
+
+    <div class="scanlines"></div>
+    <div class="vignette"></div>
+
+    <div id="intro" onclick="unlock()">
+        <img src="https://i.imgur.com/GisLhY4.png" alt="KARMA" class="karma-logo">
+        <div class="tap-to-enter">SİSTEME GİRİŞ İÇİN DOKUN</div>
+    </div>
+
+    <main id="content">
+        <div class="profile-header">
+            <div class="alias">UFUK YIKILMAZ</div>
+            <h1 class="name">ŞEHİNŞAH</h1>
+            
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="stat-label">DOĞUM</div>
+                    <div class="stat-value">27.12.1986 / ERZİNCAN</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">SİSTEM YAŞI</div>
+                    <div class="stat-value" id="age-timer">00.000000000</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">MESLEK</div>
+                    <div class="stat-value">RAP SANATÇISI / TASARIMCI</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">LABELS</div>
+                    <div class="stat-value">KARMA / BOOM BOP</div>
+                </div>
+            </div>
+
+            <div class="links">
+                <a href="https://open.spotify.com/artist/2S77XpWOfM2Ww0Fp7pXn1E" target="_blank" class="btn">SPOTIFY.LOG</a>
+                <a href="https://www.instagram.com/sehinshah/" target="_blank" class="btn">INSTAGRAM.DATA</a>
+                <a href="https://www.youtube.com/@Sehinshah" target="_blank" class="btn">VISUAL.ARCHIVE</a>
+            </div>
+        </div>
+
+        <div style="font-size: 0.6rem; color: #333; margin-top: 20px; letter-spacing: 2px;">
+            © 2026 KARMA COMPANY - ALL RIGHTS RESERVED
+        </div>
+    </main>
+
+    <script>
+        // Intro'yu geçme fonksiyonu
+        function unlock() {
+            const intro = document.getElementById('intro');
+            const content = document.getElementById('content');
+            
+            intro.style.transform = 'scale(1.5)';
+            intro.style.opacity = '0';
+            
+            setTimeout(() => {
+                intro.style.display = 'none';
+                content.style.opacity = '1';
+                content.style.transform = 'translateY(0)';
+            }, 800);
+        }
+
+        // Hassas Yaş Sayacı
+        function initTimer() {
+            const birthDate = new Date('1986-12-27T00:00:00');
+            
+            setInterval(() => {
+                const now = new Date();
+                const diff = now - birthDate;
+                const ageInYears = diff / (1000 * 60 * 60 * 24 * 365.25);
+                document.getElementById('age-timer').innerText = ageInYears.toFixed(9);
+            }, 50);
+        }
+    </script>
+</body>
+</html>
