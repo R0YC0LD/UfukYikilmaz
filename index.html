@@ -25,18 +25,37 @@
             opacity: 0; transition: opacity 1s ease;
         }
 
-        /* --- AFİLLİ INTRO --- */
+        /* --- ÖNCEKİ SADE & ŞIK INTRO --- */
         #intro {
             position: fixed; inset: 0; background: #000; 
-            display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 2000;
-            transition: 1.2s cubic-bezier(0.85, 0, 0.15, 1); cursor: pointer;
+            display: flex; justify-content: center; align-items: center; z-index: 2000;
+            transition: all 1s cubic-bezier(0.85, 0, 0.15, 1); cursor: pointer;
         }
-        .intro-aura { position: absolute; width: 400px; height: 400px; background: var(--shn-pink); border-radius: 50%; filter: blur(150px); opacity: 0; animation: auraBurst 4s infinite alternate; }
-        @keyframes auraBurst { 0% { opacity: 0.1; transform: scale(1); } 100% { opacity: 0.4; transform: scale(1.3); } }
-        .karma-img { width: 250px; animation: logoFloat 4s infinite ease-in-out; filter: drop-shadow(0 0 20px rgba(255,0,127,0.3)); z-index: 10; }
-        @keyframes logoFloat { 0%, 100% { transform: translateY(0); filter: brightness(1); } 50% { transform: translateY(-20px); filter: brightness(1.3); } }
-        .enter-text { margin-top: 50px; font-family: 'Syncopate'; font-size: 0.6rem; letter-spacing: 12px; color: var(--shn-pink); animation: tGlow 2s infinite; z-index: 10; }
-        @keyframes tGlow { 50% { opacity: 0.3; } }
+
+        .intro-glow {
+            position: absolute; width: 300px; height: 300px;
+            background: var(--shn-pink); border-radius: 50%;
+            filter: blur(120px); opacity: 0.15;
+            animation: auraPulse 4s infinite ease-in-out;
+        }
+
+        @keyframes auraPulse { 0%, 100% { opacity: 0.1; transform: scale(1); } 50% { opacity: 0.25; transform: scale(1.2); } }
+
+        .karma-container { position: relative; z-index: 10; text-align: center; }
+        
+        .karma-img {
+            width: 220px;
+            filter: drop-shadow(0 0 10px rgba(255, 0, 127, 0.2));
+            animation: logoFloat 3s infinite ease-in-out;
+        }
+
+        @keyframes logoFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+        .enter-text {
+            margin-top: 40px; font-family: 'Space Mono'; font-size: 0.6rem;
+            letter-spacing: 10px; color: var(--shn-pink); font-weight: 700;
+            text-transform: uppercase; opacity: 0.6;
+        }
 
         /* --- ANA İÇERİK --- */
         main { position: relative; z-index: 10; padding: 25px; max-width: 500px; margin: 0 auto; opacity: 0; transition: 1.5s ease; }
@@ -69,7 +88,8 @@
         .photo-slot { aspect-ratio: 1; background: #080808; border-radius: 12px; overflow: hidden; border: 1px solid #111; display: none; }
         .photo-slot img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1); opacity: 0.3; transition: 0.6s; }
 
-        .album-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        /* Albümler */
+        .album-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .album-card { background: #050505; border-radius: 15px; overflow: hidden; border: 1px solid #111; text-decoration: none; transition: 0.4s; }
         .album-img { width: 100%; aspect-ratio: 1; overflow: hidden; }
         .album-img img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1); opacity: 0.3; transition: 0.6s; }
@@ -78,9 +98,8 @@
         .social-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 30px; }
         .btn { padding: 16px; border-radius: 15px; text-align: center; font-size: 0.8rem; font-weight: 700; text-decoration: none; border: 1px solid #111; color: #333; transition: 0.4s; }
         
-        .sig { margin-top: 60px; text-align: center; font-size: 0.75rem; color: #fff; font-family: 'Space Mono'; padding-bottom: 40px; }
-        .sig a { color: var(--shn-pink); text-decoration: none; font-weight: bold; border-bottom: 1px solid rgba(255, 0, 127, 0.3); padding-bottom: 2px; transition: 0.3s ease; }
-        .sig a:hover { border-bottom-color: var(--shn-pink); }
+        .sig { margin-top: 60px; text-align: center; font-size: 0.7rem; color: #222; font-family: 'Space Mono'; transition: 0.5s; padding-bottom: 40px; }
+        .sig a { color: inherit; text-decoration: none; font-weight: bold; border-bottom: 1px solid transparent; transition: 0.5s; }
     </style>
 </head>
 <body onload="init()">
@@ -89,10 +108,10 @@
     <div id="dynamic-glow"></div>
 
     <div id="intro" onclick="reveal()">
-        <div class="intro-aura"></div>
+        <div class="intro-glow"></div>
         <div class="karma-container">
             <img src="karma.png" class="karma-img" alt="KARMA">
-            <div class="enter-text">ILLUMINATE UNIVERSE</div>
+            <div class="enter-text">TAP TO START</div>
         </div>
     </div>
 
@@ -144,7 +163,7 @@
             <a href="https://www.instagram.com/sehinsah/" target="_blank" class="btn glow-target">INSTAGRAM</a>
         </div>
 
-        <div class="sig">
+        <div class="sig glow-target">
             MADE BY <a href="https://www.instagram.com/on_r19/" target="_blank">ONUR TERYAKİOĞLU</a>
         </div>
     </main>
@@ -164,7 +183,6 @@
                     el.style.opacity = "1";
                     el.style.filter = "grayscale(0)";
                     
-                    // Profil Fotoğrafı ve Konteynerı için özel aydınlatma
                     if(el.classList.contains('pp-container')) {
                         el.style.borderColor = "var(--shn-pink)";
                         el.querySelector('img').style.filter = "grayscale(0)";
@@ -182,6 +200,7 @@
                         el.querySelector('.album-name').style.color = "#fff"; 
                     }
                     if(el.classList.contains('btn')) { el.style.borderColor = "var(--shn-pink)"; el.style.color = "var(--shn-pink)"; el.style.boxShadow = "0 0 15px rgba(255,0,127,0.2)"; }
+                    if(el.classList.contains('sig')) { el.style.color = "var(--shn-pink)"; el.querySelector('a').style.borderBottomColor = "var(--shn-pink)"; }
                 } else {
                     if(el.classList.contains('pp-container')) {
                         el.style.opacity = "0.3";
@@ -200,6 +219,7 @@
                         el.querySelector('.album-name').style.color = "#333"; 
                     }
                     if(el.classList.contains('btn')) { el.style.borderColor = "#111"; el.style.color = "#333"; el.style.boxShadow = "none"; }
+                    if(el.classList.contains('sig')) { el.style.color = "#1a1a1a"; el.querySelector('a').style.borderBottomColor = "transparent"; }
                 }
             });
         }
@@ -208,7 +228,8 @@
 
         function init() {
             setInterval(() => {
-                const age = (new Date() - bday) / (1000 * 60 * 60 * 24 * 365.25);
+                const now = new Date();
+                const age = (now - bday) / (1000 * 60 * 60 * 24 * 365.25);
                 document.getElementById('age-timer').innerText = age.toFixed(9);
             }, 100);
             scanImages();
@@ -237,11 +258,16 @@
 
         function reveal() {
             document.getElementById('myBeat').play();
-            document.getElementById('intro').style.opacity = '0';
-            document.getElementById('dynamic-glow').style.opacity = '1';
+            const intro = document.getElementById('intro');
+            intro.style.transform = 'translateY(-100%)';
             setTimeout(() => {
-                document.getElementById('intro').style.display = 'none';
+                intro.style.display = 'none';
                 document.getElementById('main').style.opacity = '1';
+                document.getElementById('main').style.transform = 'translateY(0)';
+                // Işığı konumlandır
+                const glow = document.getElementById('dynamic-glow');
+                glow.style.top = (window.innerHeight * 0.3) + 'px';
+                document.getElementById('dynamic-glow').style.opacity = '1';
                 updateGlow();
             }, 600);
         }
