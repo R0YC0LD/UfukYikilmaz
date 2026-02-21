@@ -14,9 +14,27 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--bg); color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        body { 
+            background-color: var(--bg); 
+            color: #fff; 
+            font-family: 'Inter', sans-serif; 
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
 
-        /* --- SADE & ŞIK INTRO --- */
+        /* --- DİNAMİK KAYAN IŞIK (SCROLL GLOW) --- */
+        #dynamic-glow {
+            position: fixed;
+            top: 0; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(255, 0, 127, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: -1;
+            transition: top 0.3s ease-out; /* Kaydırma hızına uyum sağlar */
+        }
+
+        /* --- SİNEMATİK INTRO --- */
         #intro {
             position: fixed; inset: 0; background: #000; 
             display: flex; justify-content: center; align-items: center; z-index: 2000;
@@ -54,14 +72,14 @@
         .pp-container {
             width: 130px; height: 130px; border-radius: 50%; margin: 0 auto 20px;
             border: 2px solid var(--shn-pink); overflow: hidden;
-            box-shadow: 0 0 30px rgba(255, 0, 127, 0.2);
+            box-shadow: 0 0 30px rgba(255, 0, 127, 0.1);
         }
         .pp-container img { width: 100%; height: 100%; object-fit: cover; }
         
         .shn-name { font-size: 2rem; font-weight: 700; letter-spacing: -1px; font-family: 'Syncopate'; }
 
         .info-card {
-            background: rgba(255, 0, 127, 0.03); border: 1px solid rgba(255, 0, 127, 0.1);
+            background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 20px; padding: 20px; margin: 25px 0; text-align: left;
         }
         .info-item { margin-bottom: 10px; font-size: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px; }
@@ -69,7 +87,7 @@
         .info-value { color: #ccc; }
 
         .section-title {
-            font-family: 'Space Mono'; font-size: 0.7rem; color: var(--shn-pink);
+            font-family: 'Space Mono'; font-size: 0.7rem; color: #fff;
             text-transform: uppercase; letter-spacing: 4px; margin: 30px 0 15px 0;
             display: flex; align-items: center; gap: 10px;
         }
@@ -102,9 +120,11 @@
         .sig a { color: var(--shn-pink); text-decoration: none; opacity: 0.6; }
     </style>
 </head>
-<body onload="init()">
+<body>
 
     <audio id="myBeat" src="beat.mp3" loop></audio>
+
+    <div id="dynamic-glow"></div>
 
     <div id="intro" onclick="reveal()">
         <div class="intro-glow"></div>
@@ -126,8 +146,7 @@
                 <div class="info-item"><span class="info-label">AKA</span><span class="info-value">HSNSBBH / ŞEHİNŞAH</span></div>
                 <div class="info-item"><span class="info-label">DOĞUM</span><span class="info-value">27.12.1986 (Kemah, Erzincan)</span></div>
                 <div class="info-item"><span class="info-label">TARZ</span><span class="info-value">Hip hop, Trap, Baile Funk</span></div>
-                <div class="info-item"><span class="info-label">MESLEK</span><span class="info-value">Müzisyen, Söz Yazarı, Film Yapımcısı, Editör</span></div>
-                <div class="info-item"><span class="info-label">ETKİN</span><span class="info-value">2002 - Günümüz</span></div>
+                <div class="info-item"><span class="info-label">MESLEK</span><span class="info-value">Müzisyen, Prodüktör, Editör</span></div>
                 <div class="info-item"><span class="info-label">LABEL</span><span class="info-value">Karma Company</span></div>
             </div>
         </div>
@@ -147,26 +166,26 @@
             <div class="photo-grid" id="photo-grid"></div>
         </div>
 
-        <div class="section-title">Diskografi</div>
+        <div class="section-title">Discography</div>
         <div class="album-grid">
             <a href="https://open.spotify.com/album/1xNzac76pyGW65UbQ15Jpn?si=SXYm90pgRDaFlPTY41YucA" target="_blank" class="album-card">
-                <div class="album-img"><img src="6ep.jpg" alt="6EP"></div>
+                <div class="album-img"><img src="6ep.jpg"></div>
                 <div class="album-info"><span class="album-name">6EP</span><span class="album-date">2025</span></div>
             </a>
             <a href="https://open.spotify.com/album/1zkZPiKRqqVJPKIqap3SU8?si=kK3mFMXbSSmmwWDCJx0bAw" target="_blank" class="album-card">
-                <div class="album-img"><img src="ikarus.jpg" alt="IKARUS"></div>
+                <div class="album-img"><img src="ikarus.jpg"></div>
                 <div class="album-info"><span class="album-name">IKARUS</span><span class="album-date">2024</span></div>
             </a>
             <a href="https://open.spotify.com/album/5wDw71G6My66IurTcLbULV?si=OW6vcMAIR7up82COdhEkeA" target="_blank" class="album-card">
-                <div class="album-img"><img src="dss.jpg" alt="DSS"></div>
+                <div class="album-img"><img src="dss.jpg"></div>
                 <div class="album-info"><span class="album-name">DSS</span><span class="album-date">2022</span></div>
             </a>
             <a href="https://open.spotify.com/album/6cWS5yrVFflrNt7o7eWgqx?si=rjootJ2_TKmCGQRkaDdSpg" target="_blank" class="album-card">
-                <div class="album-img"><img src="666.jpg" alt="666"></div>
+                <div class="album-img"><img src="666.jpg"></div>
                 <div class="album-info"><span class="album-name">666</span><span class="album-date">2020</span></div>
             </a>
             <a href="https://open.spotify.com/album/2q7QzY8q8OVxa5sAyyl8OF?si=hce-O0Q7RWOGrh83tt5HFA" target="_blank" class="album-card">
-                <div class="album-img"><img src="deev.jpg" alt="DEEV"></div>
+                <div class="album-img"><img src="deev.jpg"></div>
                 <div class="album-info"><span class="album-name">DEEV</span><span class="album-date">2016</span></div>
             </a>
         </div>
@@ -185,6 +204,14 @@
         const bday = new Date('1986-12-27T00:00:00');
         const exts = ['jpg', 'png', 'webp', 'jpeg'];
         let found = 0;
+
+        // Işık hüzmesini kaydırma efekti
+        window.addEventListener('scroll', () => {
+            const glow = document.getElementById('dynamic-glow');
+            const scrollPos = window.scrollY;
+            // Işığın dikey pozisyonunu ekranın %30'u + kaydırma miktarı olarak ayarla
+            glow.style.top = (window.innerHeight * 0.3) + scrollPos + 'px';
+        });
 
         function init() {
             setInterval(() => {
@@ -212,19 +239,15 @@
                 slot.style.display = 'block';
                 slot.appendChild(img);
                 document.getElementById('photo-grid').appendChild(slot);
-                updateProgress();
+                document.getElementById('bar-fill').style.width = (found / 100 * 100) + '%';
+                document.getElementById('count-label').innerText = `${found} / 100`;
             };
             img.onerror = () => checkExt(idx, eIdx + 1);
         }
 
-        function updateProgress() {
-            document.getElementById('bar-fill').style.width = (found / 100 * 100) + '%';
-            document.getElementById('count-label').innerText = `${found} / 100`;
-        }
-
         function reveal() {
             const beat = document.getElementById('myBeat');
-            beat.play().catch(e => console.log("Audio play error:", e));
+            beat.play().catch(e => console.log("Ses çalma hatası:", e));
 
             const intro = document.getElementById('intro');
             intro.style.transform = 'translateY(-100%)';
@@ -232,8 +255,14 @@
                 intro.style.display = 'none';
                 document.getElementById('main').style.opacity = '1';
                 document.getElementById('main').style.transform = 'translateY(0)';
+                // Sayfa ilk açıldığında ışığı konumlandır
+                const glow = document.getElementById('dynamic-glow');
+                glow.style.top = (window.innerHeight * 0.3) + 'px';
             }, 600);
         }
+
+        // Sayfa yüklendiğinde init fonksiyonunu başlat
+        window.onload = init;
     </script>
 </body>
 </html>
