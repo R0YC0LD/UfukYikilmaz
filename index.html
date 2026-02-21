@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SHN | THE UNIVERSE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=Space+Mono:wght@400;700&family=Syncopate:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #030303;
+            --card-bg: #0a0a0a;
+            --shn-pink: #ff007f;
+            --secondary: #222;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg); color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; min-height: 100vh; }
+
+        /* --- MOBİL OPTİMİZE FENER --- */
+        #dynamic-glow {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 90vw; height: 90vw; max-width: 600px; max-height: 600px;
+            background: radial-gradient(circle, rgba(255, 0, 127, 0.3) 0%, transparent 70%);
+            pointer-events: none; z-index: 1; filter: blur(40px);
+            opacity: 0; transition: opacity 1s ease;
+        }
+
+        /* --- SİNEMATİK INTRO --- */
+        #intro {
+            position: fixed; inset: 0; background: #000; 
+            display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 2000;
+            transition: 1s cubic-bezier(0.85, 0, 0.15, 1); cursor: pointer;
+        }
+        .intro-aura { position: absolute; width: 300px; height: 300px; background: var(--shn-pink); border-radius: 50%; filter: blur(100px); opacity: 0.15; animation: pulse 3s infinite alternate; }
+        @keyframes pulse { 0% { transform: scale(1); opacity: 0.1; } 100% { transform: scale(1.4); opacity: 0.3; } }
+        .karma-img { width: 200px; z-index: 10; animation: float 4s infinite ease-in-out; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
+        /* --- ANA İÇERİK --- */
+        main { position: relative; z-index: 10; padding: 20px; max-width: 500px; margin: 0 auto; opacity: 0; transition: 1.5s ease; }
+
+        .profile-section { text-align: center; margin-top: 20px; }
+        .pp-container {
+            width: 140px; height: 140px; border-radius: 50%; margin: 0 auto 20px;
+            border: 2px solid rgba(255, 255, 255, 0.1); overflow: hidden;
+            transition: 0.4s ease; filter: grayscale(1); opacity: 0.3;
+        }
+        .pp-container img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .shn-name { 
+            font-size: 2rem; font-weight: 700; letter-spacing: -1px; font-family: 'Syncopate';
+            color: transparent; -webkit-text-stroke: 1px rgba(255, 255, 255, 0.2);
+            transition: 0.4s ease;
+        }
+
+        .info-card { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px; padding: 20px; margin: 25px 0; text-align: left; }
+        .info-item { margin-bottom: 10px; font-size: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 8px; color: #555; transition: 0.4s; }
+        .info-label { color: #333; font-family: 'Space Mono'; font-weight: bold; width: 90px; display: inline-block; transition: 0.4s; }
+
+        .section-title { font-family: 'Space Mono'; font-size: 0.7rem; color: #333; text-transform: uppercase; letter-spacing: 4px; margin: 35px 0 15px 0; display: flex; align-items: center; gap: 10px; transition: 0.4s; }
+        .section-title::after { content: ""; flex: 1; height: 1px; background: #111; }
+
+        #age-timer { font-family: 'Space Mono'; font-size: 1.4rem; font-weight: 700; color: #222; transition: 0.4s; }
+
+        .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .photo-slot { aspect-ratio: 1; background: #080808; border-radius: 12px; overflow: hidden; border: 1px solid #111; display: none; }
+        .photo-slot img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1); opacity: 0.3; transition: 0.4s; }
+
+        .album-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .album-card { background: #050505; border-radius: 15px; overflow: hidden; border: 1px solid #111; text-decoration: none; transition: 0.4s; }
+        .album-img { width: 100%; aspect-ratio: 1; overflow: hidden; filter: grayscale(1); opacity: 0.3; transition: 0.4s; }
+        .album-img img { width: 100%; height: 100%; object-fit: cover; }
+        .album-name { padding: 12px; font-size: 0.8rem; font-weight: 700; color: #333; transition: 0.4s; text-align: center; }
+
+        .social-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 30px; }
+        .btn { padding: 16px; border-radius: 15px; text-align: center; font-size: 0.8rem; font-weight: 700; text-decoration: none; border: 1px solid #111; color: #333; transition: 0.4s; }
+        
+        .sig { margin-top: 60px; text-align: center; font-size: 0.7rem; color: #1a1a1a; font-family: 'Space Mono'; transition: 0.4s; padding-bottom: 40px; }
+        .sig a { color: inherit; text-decoration: none; font-weight: bold; border-bottom: 1px solid transparent; transition: 0.4s; }
+    </style>
+</head>
+<body>
+
+    <audio id="myBeat" src="beat.mp3" loop></audio>
+    <div id="dynamic-glow"></div>
+
+    <div id="intro" onclick="reveal()">
+        <div class="intro-aura"></div>
+        <img src="karma.png" class="karma-img" alt="KARMA">
+        <div style="margin-top:30px; font-family:'Syncopate'; font-size:0.6rem; letter-spacing:8px; color:var(--shn-pink); font-weight:700;">ILLUMINATE</div>
+    </div>
+
+    <main id="main">
+        <div class="profile-section">
+            <div class="pp-container glow-target"><img src="sehinsah.jpg" alt="SHN"></div>
+            <h1 class="shn-name glow-target">UFUK YIKILMAZ</h1>
+            
+            <div class="info-card">
+                <div class="info-item glow-target"><span class="info-label">AKA</span> HSNSBBH / ŞEHİNŞAH</div>
+                <div class="info-item glow-target"><span class="info-label">DOĞUM</span> 27.12.1986 (Kemah, Erzincan)</div>
+                <div class="info-item glow-target"><span class="info-label">TARZ</span> Hip hop, Trap, Baile Funk</div>
+                <div class="info-item glow-target"><span class="info-label">LABEL</span> Karma Company</div>
+            </div>
+        </div>
+
+        <div class="section-title glow-target">Genetic Cycle</div>
+        <div style="text-align: center; padding: 10px;"><div id="age-timer" class="glow-target">00.00000000</div></div>
+
+        <div class="section-title glow-target">Collection Data</div>
+        <div class="photo-grid" id="photo-grid"></div>
+
+        <div class="section-title glow-target">Discography</div>
+        <div class="album-grid">
+            <a href="https://open.spotify.com/album/1xNzac76pyGW65UbQ15Jpn?si=SXYm90pgRDaFlPTY41YucA" target="_blank" class="album-card glow-target">
+                <div class="album-img"><img src="6ep.jpg"></div>
+                <div class="album-name">6EP</div>
+            </a>
+            <a href="https://open.spotify.com/album/1zkZPiKRqqVJPKIqap3SU8?si=kK3mFMXbSSmmwWDCJx0bAw" target="_blank" class="album-card glow-target">
+                <div class="album-img"><img src="ikarus.jpg"></div>
+                <div class="album-name">IKARUS</div>
+            </a>
+            <a href="https://open.spotify.com/album/5wDw71G6My66IurTcLbULV?si=OW6vcMAIR7up82COdhEkeA" target="_blank" class="album-card glow-target">
+                <div class="album-img"><img src="dss.jpg"></div>
+                <div class="album-name">DSS</div>
+            </a>
+            <a href="https://open.spotify.com/album/6cWS5yrVFflrNt7o7eWgqx?si=rjootJ2_TKmCGQRkaDdSpg" target="_blank" class="album-card glow-target">
+                <div class="album-img"><img src="666.jpg"></div>
+                <div class="album-name">666</div>
+            </a>
+        </div>
+
+        <div class="social-btns">
+            <a href="https://open.spotify.com/intl-tr/artist/0FUsrstJwmg4WVHQMTYuUA" target="_blank" class="btn glow-target">SPOTIFY</a>
+            <a href="https://www.instagram.com/sehinsah/" target="_blank" class="btn glow-target">INSTAGRAM</a>
+        </div>
+
+        <div class="sig glow-target">
+            <a href="https://www.instagram.com/on_r19/" target="_blank">ONUR TERYAKİOĞLU</a>
+        </div>
+    </main>
+
+    <script>
+        const bday = new Date('1986-12-27T00:00:00');
+        const exts = ['jpg', 'png', 'webp', 'jpeg'];
+
+        // Aydınlatma Kontrolü
+        function updateGlow() {
+            const center = window.innerHeight / 2;
+
+            document.querySelectorAll('.glow-target, .photo-slot img').forEach(el => {
+                const rect = el.getBoundingClientRect();
+                const elCenter = rect.top + (rect.height / 2);
+                const dist = Math.abs(elCenter - center);
+
+                // Aydınlanma eşiği (Mobilde daha geniş alan)
+                if (dist < 200) {
+                    el.style.opacity = "1";
+                    el.style.filter = "grayscale(0)";
+                    if(el.classList.contains('shn-name')) { el.style.color = "var(--shn-pink)"; el.style.webkitTextStroke = "1px var(--shn-pink)"; el.style.textShadow = "0 0 20px var(--shn-pink)"; }
+                    if(el.classList.contains('info-item')) { el.style.color = "#fff"; el.querySelector('.info-label').style.color = "var(--shn-pink)"; }
+                    if(el.id === 'age-timer') { el.style.color = "var(--shn-pink)"; el.style.textShadow = "0 0 15px var(--shn-pink)"; }
+                    if(el.classList.contains('section-title')) { el.style.color = "#fff"; }
+                    if(el.classList.contains('album-card')) { el.querySelector('.album-img').style.opacity = "1"; el.querySelector('.album-img').style.filter = "grayscale(0)"; el.querySelector('.album-name').style.color = "#fff"; }
+                    if(el.classList.contains('btn')) { el.style.borderColor = "var(--shn-pink)"; el.style.color = "var(--shn-pink)"; el.style.boxShadow = "0 0 15px rgba(255,0,127,0.2)"; }
+                    if(el.classList.contains('sig')) { el.style.color = "var(--shn-pink)"; el.querySelector('a').style.borderBottomColor = "var(--shn-pink)"; }
+                } else {
+                    el.style.opacity = el.tagName === 'IMG' ? "0.35" : "1";
+                    if(!el.classList.contains('album-card')) el.style.filter = "grayscale(1)";
+                    if(el.classList.contains('shn-name')) { el.style.color = "transparent"; el.style.webkitTextStroke = "1px rgba(255,255,255,0.1)"; el.style.textShadow = "none"; }
+                    if(el.classList.contains('info-item')) { el.style.color = "#555"; el.querySelector('.info-label').style.color = "#333"; }
+                    if(el.id === 'age-timer') { el.style.color = "#222"; el.style.textShadow = "none"; }
+                    if(el.classList.contains('section-title')) { el.style.color = "#333"; }
+                    if(el.classList.contains('album-card')) { el.querySelector('.album-img').style.opacity = "0.3"; el.querySelector('.album-img').style.filter = "grayscale(1)"; el.querySelector('.album-name').style.color = "#333"; }
+                    if(el.classList.contains('btn')) { el.style.borderColor = "#111"; el.style.color = "#333"; el.style.boxShadow = "none"; }
+                    if(el.classList.contains('sig')) { el.style.color = "#1a1a1a"; el.querySelector('a').style.borderBottomColor = "transparent"; }
+                }
+            });
+        }
+
+        window.addEventListener('scroll', updateGlow);
+
+        function init() {
+            setInterval(() => {
+                const age = (new Date() - bday) / (1000 * 60 * 60 * 24 * 365.25);
+                document.getElementById('age-timer').innerText = age.toFixed(9);
+            }, 100);
+            scanImages();
+        }
+
+        function scanImages() {
+            const grid = document.getElementById('photo-grid');
+            for (let i = 1; i <= 15; i++) {
+                checkExt(i, 0);
+            }
+        }
+
+        function checkExt(idx, eIdx) {
+            if (eIdx >= exts.length) return;
+            const img = new Image();
+            img.src = `${idx}.${exts[eIdx]}?v=${Date.now()}`;
+            img.onload = () => {
+                const slot = document.createElement('div');
+                slot.className = 'photo-slot';
+                slot.style.display = 'block';
+                slot.appendChild(img);
+                document.getElementById('photo-grid').appendChild(slot);
+            };
+            img.onerror = () => checkExt(idx, eIdx + 1);
+        }
+
+        function reveal() {
+            document.getElementById('myBeat').play();
+            document.getElementById('intro').style.opacity = '0';
+            document.getElementById('dynamic-glow').style.opacity = '1';
+            setTimeout(() => {
+                document.getElementById('intro').style.display = 'none';
+                document.getElementById('main').style.opacity = '1';
+                updateGlow();
+            }, 600);
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
