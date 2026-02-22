@@ -12,8 +12,8 @@
             --card-bg: #0a0a0a;
             --shn-pink: #ff007f;
             --secondary: #444;
-            --beat-scale: 1; /* Ses Reaksiyonu (Profil Resmi) İçin */
-            --beat-glow: 0px; /* Ses Reaksiyonu (Glow) İçin */
+            --beat-scale: 1; /* Ses Reaksiyonu İçin Dinamik Değişken */
+            --beat-glow: 0px;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -54,20 +54,30 @@
         /* --- ANA İÇERİK --- */
         main { position: relative; z-index: 10; padding: 25px; max-width: 500px; margin: 0 auto; opacity: 0; transition: 1.5s ease; }
 
-        /* PROFIL FOTOĞRAFI (SADECE BU BEAT İLE ESNER) */
-        .profile-section { text-align: center; margin-top: 20px; }
-        .pp-container {
-            width: 150px; height: 150px; border-radius: 50%; margin: 0 auto 25px;
-            border: 2px solid rgba(255, 255, 255, 0.1); overflow: hidden; 
-            transform: scale(var(--beat-scale)); /* JS üzerinden gelen keskin ritim verisi */
-            box-shadow: 0 0 var(--beat-glow) var(--shn-pink);
-            will-change: transform, box-shadow;
-            cursor: pointer;
+        /* --- PROFIL FOTOĞRAFI (SABİT GÖRÜNÜR + SMOOTH BEAT REACTION) --- */
+        .profile-section { text-align: center; margin-top: 20px; position: relative; z-index: 10; }
+        .pp-wrapper {
+            /* Fotoğraf büyüdüğünde yazının üstüne taşmasını engellemek için yükseklik sabitledik */
+            height: 180px; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 10px;
         }
-        /* Resim filtresi fener için ayrı tutuldu, transform CSS transition'ı kapatıldı ki sese anında tepki versin */
-        .pp-container img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1); opacity: 0.3; transition: filter 0.5s, opacity 0.5s; pointer-events: none; }
+        .pp-container {
+            width: 140px; height: 140px; border-radius: 50%; 
+            border: 2px solid var(--shn-pink); overflow: hidden; 
+            transform: scale(var(--beat-scale)); 
+            box-shadow: 0 0 var(--beat-glow) var(--shn-pink);
+            cursor: crosshair;
+            /* Performans ve smooth etki için will-change eklendi */
+            will-change: transform, box-shadow;
+            z-index: 20; 
+        }
+        /* Resim her zaman full opak ve renkli */
+        .pp-container img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
         
-        .shn-name { font-size: 2.2rem; font-weight: 700; letter-spacing: -1px; font-family: 'Syncopate'; color: transparent; -webkit-text-stroke: 1px rgba(255, 255, 255, 0.2); transition: 0.5s ease; }
+        .shn-name { font-size: 2.2rem; font-weight: 700; letter-spacing: -1px; font-family: 'Syncopate'; color: transparent; -webkit-text-stroke: 1px rgba(255, 255, 255, 0.2); transition: 0.5s ease; position: relative; z-index: 5; }
 
         .info-card { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px; padding: 20px; margin: 25px 0; text-align: left; }
         .info-item { margin-bottom: 10px; font-size: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.03); padding-bottom: 8px; color: #555; transition: 0.5s; }
@@ -86,7 +96,7 @@
         .photo-slot img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1); opacity: 0.3; transition: filter 0.6s, opacity 0.6s, transform 0.3s; pointer-events: none;}
         .photo-slot:hover img { transform: scale(1.05); } 
 
-        /* --- ALBÜM LİSTESİ VE 3D TILT EFEKTİ SADECE BURADA --- */
+        /* --- ALBÜM LİSTESİ VE 3D TILT EFEKTİ --- */
         .album-list { display: flex; flex-direction: column; gap: 15px; perspective: 1000px; }
         .album-card { 
             position: relative; display: flex; align-items: stretch; background: #050505; 
@@ -167,7 +177,9 @@
         <div id="bday-banner">👑 BUGÜN KRALIN DOĞUM GÜNÜ! İYİ Kİ DOĞDUN UFUK YIKILMAZ.</div>
 
         <div class="profile-section">
-            <div class="pp-container glow-target" onclick="triggerSecret()"><img src="sehinsah.jpg" alt="SHN"></div>
+            <div class="pp-wrapper">
+                <div class="pp-container" onclick="triggerSecret()"><img src="sehinsah.jpg" alt="SHN"></div>
+            </div>
             <h1 class="shn-name glow-target">UFUK YIKILMAZ</h1>
             
             <div class="info-card">
@@ -214,8 +226,8 @@
         </div>
 
         <div class="social-btns">
-            <a href="https://open.spotify.com/intl-tr/artist/0FUsrstJwmg4WVHQMTYuUA" target="_blank" class="btn glow-target">SPOTIFY</a>
-            <a href="https://www.instagram.com/sehinsah/" target="_blank" class="btn glow-target">INSTAGRAM</a>
+            <a href="https://open.spotify.com/intl-tr/artist/0FUsrstJwmg4WVHQMTYuUA" target="_blank" class="btn glow-target tilt-card">SPOTIFY</a>
+            <a href="https://www.instagram.com/sehinsah/" target="_blank" class="btn glow-target tilt-card">INSTAGRAM</a>
         </div>
 
         <div class="sig">
@@ -238,9 +250,11 @@
         let isAudioSetup = false;
         let currentBeatScale = 1; 
 
-        // --- 1. KESKİN VE GÜÇLÜ BEAT REACTION SİSTEMİ (ATTACK/RELEASE) ---
-        let currentScaleValue = 1; // Yumuşatılmış değer
-        let currentGlowValue = 0;  // Yumuşatılmış değer
+        // --- 1. SMOOTH & KESKİN BEAT REACTION SİSTEMİ (LERP MANTIĞI) ---
+        let targetScaleValue = 1;
+        let targetGlowValue = 0;
+        let currentScaleValue = 1; 
+        let currentGlowValue = 0;  
 
         function setupAudio() {
             if(isAudioSetup) return;
@@ -251,7 +265,7 @@
                 const source = audioCtx.createMediaElementSource(audio);
                 source.connect(analyser);
                 analyser.connect(audioCtx.destination);
-                analyser.fftSize = 64; // Çözünürlüğü düşürüp hızı/keskinliği artırdım (Daha az veri, daha hızlı tepki)
+                analyser.fftSize = 64; 
                 dataArray = new Uint8Array(analyser.frequencyBinCount);
                 isAudioSetup = true;
                 renderFrame();
@@ -263,32 +277,24 @@
             if(!analyser) return;
             analyser.getByteFrequencyData(dataArray);
             
-            // Sadece en düşük, saf Kick/Bas frekansına odaklan (İlk 2 frekans bandı)
+            // Sadece en düşük bas frekanslarına odaklan (Kick)
             let bassIntensity = (dataArray[0] + dataArray[1]) / 2;
             
-            // Eşik değeri (Attack): Düşük sesleri görmezden gel, sadece vurucu baslarda tepki ver
-            let targetScale = 1;
-            let targetGlow = 0;
-            
-            if (bassIntensity > 150) { // Bas eşiği (150 üstü sert vuruş sayılır)
-                // Şiddete göre max %40 büyüme ve 100px glow
-                targetScale = 1 + ((bassIntensity - 150) / 105) * 0.40; 
-                targetGlow = ((bassIntensity - 150) / 105) * 100;
+            if (bassIntensity > 160) { // Bas eşiği biraz yükseltildi, sadece sert vuruşlarda tepki versin
+                // Max %25 büyüme (Daha kontrollü) ve max 60px parlama
+                targetScaleValue = 1 + ((bassIntensity - 160) / 95) * 0.25; 
+                targetGlowValue = ((bassIntensity - 160) / 95) * 60;
+            } else {
+                targetScaleValue = 1;
+                targetGlowValue = 0;
             }
 
-            // Attack/Release Mantığı (Smoothing)
-            // Büyürken (Attack) anında büyü, Küçülürken (Release) yavaşça sön.
-            if (targetScale > currentScaleValue) {
-                currentScaleValue = targetScale; // Anında vur
-                currentGlowValue = targetGlow;
-            } else {
-                currentScaleValue -= 0.05; // Yavaşça sön (Release)
-                currentGlowValue -= 10;
-                if(currentScaleValue < 1) currentScaleValue = 1;
-                if(currentGlowValue < 0) currentGlowValue = 0;
-            }
+            // LERP (Linear Interpolation) ile hareketi yumuşat
+            // 0.2 değeri ne kadar küçükse animasyon o kadar yumuşak olur, ne kadar büyükse o kadar keskin olur.
+            currentScaleValue += (targetScaleValue - currentScaleValue) * 0.25;
+            currentGlowValue += (targetGlowValue - currentGlowValue) * 0.25;
             
-            currentBeatScale = currentScaleValue; // Partiküller için global değişkene yaz
+            currentBeatScale = currentScaleValue; // Partiküller için
             
             document.documentElement.style.setProperty('--beat-scale', currentScaleValue);
             document.documentElement.style.setProperty('--beat-glow', `${currentGlowValue}px`);
@@ -404,8 +410,7 @@
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 
                 // Hızı beat şiddetine göre (currentBeatScale) katla.
-                // Profil fotosu max %40 (1.40) büyür, biz bunu partikül hızında abartarak kullanalım.
-                let speedMult = currentBeatScale > 1 ? 1 + ((currentBeatScale - 1) * 10) : 1; 
+                let speedMult = currentBeatScale > 1 ? 1 + ((currentBeatScale - 1) * 8) : 1; 
 
                 particles.forEach(p => {
                     p.x += p.vx * speedMult;
@@ -417,7 +422,7 @@
 
                     ctx.beginPath();
                     // Partiküller basla birlikte çok hafif şişsin
-                    ctx.arc(p.x, p.y, p.radius * (currentBeatScale > 1 ? 1.5 : 1), 0, Math.PI * 2);
+                    ctx.arc(p.x, p.y, p.radius * (currentBeatScale > 1.05 ? 1.5 : 1), 0, Math.PI * 2);
                     ctx.fillStyle = `rgba(255, 0, 127, ${p.alpha})`;
                     ctx.fill();
                 });
@@ -458,14 +463,13 @@
                 const elCenter = rect.top + (rect.height / 2);
                 const dist = Math.abs(elCenter - center);
 
+                // pp-container artık fenerden bağımsız
+                if(el.classList.contains('pp-container')) return; 
+
                 if (dist < 200) {
                     el.style.opacity = "1";
                     el.style.filter = "grayscale(0)";
                     
-                    if(el.classList.contains('pp-container')) {
-                        el.style.borderColor = "var(--shn-pink)";
-                        // pp-container için filter ve opacity css'te halledildiğinden burada dokunmuyoruz.
-                    }
                     if(el.classList.contains('shn-name')) { el.style.color = "var(--shn-pink)"; el.style.webkitTextStroke = "1px var(--shn-pink)"; el.style.textShadow = "0 0 20px var(--shn-pink)"; }
                     if(el.classList.contains('info-item')) { el.style.color = "#fff"; el.querySelector('.info-label').style.color = "var(--shn-pink)"; }
                     if(el.id === 'age-timer') { el.style.color = "var(--shn-pink)"; el.style.textShadow = "0 0 15px var(--shn-pink)"; }
@@ -479,7 +483,6 @@
                     }
                     if(el.classList.contains('btn')) { el.style.borderColor = "var(--shn-pink)"; el.style.color = "var(--shn-pink)"; el.style.boxShadow = "0 0 15px rgba(255,0,127,0.2)"; }
                 } else {
-                    if(el.classList.contains('pp-container')) { el.style.borderColor = "rgba(255,255,255,0.1)"; }
                     if(el.tagName === 'IMG' && !el.closest('.pp-container')) { el.style.opacity = "0.35"; el.style.filter = "grayscale(1)"; }
                     if(el.classList.contains('shn-name')) { el.style.color = "transparent"; el.style.webkitTextStroke = "1px rgba(255,255,255,0.1)"; el.style.textShadow = "none"; }
                     if(el.classList.contains('info-item')) { el.style.color = "#555"; el.querySelector('.info-label').style.color = "#333"; }
